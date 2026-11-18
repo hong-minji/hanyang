@@ -120,15 +120,15 @@
   };
 
   var decks = [
-    { id: 'sample-catchbin', name: '피지컬AI 2조', title: 'CatchBin — 던지면 받아 주는 쓰레기통', url: 'https://sites.google.com/view/example-catchbin', note: '60번 던져 45번 받았습니다, 성공률 75%', hasCode: true, m: 3 },
-    { id: 'sample-fruit', name: '2조 · 백승우', title: '색으로 과일을 가르는 컨베이어', url: 'https://sites.google.com/view/example-fruit-sorter', note: '사과와 귤을 카메라로 구분합니다', hasCode: false, m: 6 },
-    { id: 'sample-linebot', name: '1조', title: 'LineBot — 선을 따라 배달하는 로봇', url: '', note: '12 m 코스 열 번 중 아홉 번 완주', hasCode: true, m: 9 },
-    { id: 'sample-window', name: '5조 · 신예린', title: '창문 닦는 로봇 WinBot', url: 'https://gemini.google.com/share/example0001', note: '', hasCode: false, m: 13 },
-    { id: 'sample-grip', name: '4조', title: 'GripSense — 달걀을 깨지 않는 그리퍼', url: 'https://sites.google.com/view/example-gripsense', note: '압력 센서로 쥐는 힘을 줄입니다', hasCode: true, m: 17 },
-    { id: 'sample-pill', name: '7조 · 노하준', title: '약 챙겨 주는 로봇 PillPal', url: 'https://sites.google.com/view/example-pillpal', note: '정해진 시간에 약통을 밀어 줍니다', hasCode: false, m: 22 },
-    { id: 'sample-balance', name: '6조', title: 'BalanceBot — 두 바퀴로 서는 로봇', url: '', note: '가장 오래 선 기록 3분 12초', hasCode: true, m: 26 },
-    { id: 'sample-park', name: '8조 · 권나은', title: '주차 자리를 알려 주는 ParkEye', url: 'https://gemini.google.com/share/example0002', note: '빈 자리를 세어 입구 화면에 보여 줍니다', hasCode: false, m: 31 },
-    { id: 'sample-ball', name: '9조', title: '탁구공 줍는 로봇', url: 'https://sites.google.com/view/example-ballbot', note: '', hasCode: false, m: 37 }
+    { id: 'sample-catchbin', name: '정다은', title: 'CatchBin — 던지면 받아 주는 쓰레기통', url: 'https://sites.google.com/view/example-catchbin', note: '60번 던져 45번 받았습니다, 성공률 75%', hasCode: true, m: 3 },
+    { id: 'sample-fruit', name: '백승우', title: '색으로 과일을 가르는 컨베이어', url: 'https://sites.google.com/view/example-fruit-sorter', note: '사과와 귤을 카메라로 구분합니다', hasCode: false, m: 6 },
+    { id: 'sample-linebot', name: '정유나', title: 'LineBot — 선을 따라 배달하는 로봇', url: '', note: '12 m 코스 열 번 중 아홉 번 완주', hasCode: true, m: 9 },
+    { id: 'sample-window', name: '신예린', title: '창문 닦는 로봇 WinBot', url: 'https://gemini.google.com/share/example0001', note: '', hasCode: false, m: 13 },
+    { id: 'sample-grip', name: '윤가람', title: 'GripSense — 달걀을 깨지 않는 그리퍼', url: 'https://sites.google.com/view/example-gripsense', note: '압력 센서로 쥐는 힘을 줄입니다', hasCode: true, m: 17 },
+    { id: 'sample-pill', name: '노하준', title: '약 챙겨 주는 로봇 PillPal', url: 'https://sites.google.com/view/example-pillpal', note: '정해진 시간에 약통을 밀어 줍니다', hasCode: false, m: 22 },
+    { id: 'sample-balance', name: '오세림', title: 'BalanceBot — 두 바퀴로 서는 로봇', url: '', note: '가장 오래 선 기록 3분 12초', hasCode: true, m: 26 },
+    { id: 'sample-park', name: '권나은', title: '주차 자리를 알려 주는 ParkEye', url: 'https://gemini.google.com/share/example0002', note: '빈 자리를 세어 입구 화면에 보여 줍니다', hasCode: false, m: 31 },
+    { id: 'sample-ball', name: '서다인', title: '탁구공 줍는 로봇', url: 'https://sites.google.com/view/example-ballbot', note: '', hasCode: false, m: 37 }
   ].map(function (d) {
     return { id: d.id, name: d.name, title: d.title, url: d.url, note: d.note, hasCode: d.hasCode, uid: 'sample', sample: true, createdAt: now - d.m * MIN, updatedAt: now - d.m * MIN };
   });

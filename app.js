@@ -84,7 +84,7 @@
     box.appendChild(el('div', 'po-host', hostInfo(d.url).label));
     var title = d.title || '발표 제목';
     box.appendChild(el('div', 'po-title' + (title.length > 16 ? ' long' : ''), title));
-    box.appendChild(el('div', 'po-name', d.name || '이름 또는 조'));
+    box.appendChild(el('div', 'po-name', d.name || '이름'));
     return box;
   }
   // 카드의 ‹ › 버튼이 보낸 신호를 받아, 미리보기 안의 발표에 ← → 키를 대신 눌러 준다(코드 미리보기에만 넣는다).
@@ -331,7 +331,7 @@
       var f = readForm(), u = normUrl(fUrl.value);
       var d = { id: '', name: f.name, title: f.title, url: u.ok ? u.url : '', note: f.note };
       $('#tryTitle').textContent = f.title || '발표 제목';
-      $('#tryName').textContent = f.name || '이름 또는 조';
+      $('#tryName').textContent = f.name || '이름';
       $('#tryNote').textContent = f.note; $('#tryNote').hidden = !f.note;
       $('#tryHost').textContent = d.url ? hostInfo(d.url).label : (f.code ? '이 보드에 올린 코드' : '주소 없음');
       var shot = $('#tryShot'); clear(shot);
@@ -367,7 +367,7 @@
   $('#deckForm').addEventListener('submit', function (ev) {
     ev.preventDefault();
     var f = readForm(), u = normUrl(fUrl.value);
-    if (!f.name) { setStatus('#deckStatus', '이름 또는 조를 적어 주세요.', 'bad'); fName.focus(); return; }
+    if (!f.name) { setStatus('#deckStatus', '이름을 적어 주세요.', 'bad'); fName.focus(); return; }
     if (ASK_SID && !f.sid) { setStatus('#deckStatus', '학번을 적어 주세요. 보드에는 보이지 않습니다.', 'bad'); fSid.focus(); return; }
     if (ASK_SID && !/^[0-9A-Za-z-]{4,20}$/.test(f.sid)) { setStatus('#deckStatus', '학번은 숫자(와 영문자)로 4~20자까지 적을 수 있습니다.', 'bad'); fSid.focus(); return; }
     if (!f.title) { setStatus('#deckStatus', '발표 제목을 적어 주세요.', 'bad'); fTitle.focus(); return; }

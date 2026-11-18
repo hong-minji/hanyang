@@ -116,7 +116,7 @@
     return '"' + s.replace(/"/g, '""') + '"';
   }
   function csvText(list) {
-    var lines = [['번호', '학번', '이름 또는 조', '발표 제목', '발표 주소', 'HTML 코드', '올린 시각', '고친 시각'].map(cell).join(',')];
+    var lines = [['번호', '학번', '이름', '발표 제목', '발표 주소', 'HTML 코드', '올린 시각', '고친 시각'].map(cell).join(',')];
     list.forEach(function (r, i) {
       lines.push([i + 1, r.sid, r.name, r.title, r.url, r.hasCode ? '있음' : '없음', stamp(r.createdAt), stamp(r.updatedAt)].map(cell).join(','));
     });

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>발표 크게 보기</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23ECE8DF'/%3E%3Crect x='5' y='8' width='22' height='16' fill='%23fff' stroke='%2317161A' stroke-width='2.5'/%3E%3Crect x='9.5' y='12.5' width='13' height='7' fill='%23E5432A'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@600;800&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="viewer">
+
+<div class="vbar">
+  <a href="index.html?wall=1">← 보드</a>
+  <span class="v-title" id="vTitle">불러오는 중…</span>
+  <span class="v-name" id="vName"></span>
+  <span class="sp"></span>
+  <a id="vOpen" target="_blank" rel="noopener noreferrer" hidden>원래 주소 열기 ↗</a>
+  <button id="vFull" type="button">전체 화면</button>
+</div>
+
+<div class="vstage" id="stage">
+  <div class="vmsg" id="vMsg" hidden>
+    <div>
+      <b id="vMsgTitle"></b>
+      <p id="vMsgText"></p>
+      <a class="btn" id="vMsgLink" href="index.html">보드로 돌아가기</a>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="samples.js"></script>
+<script src="store.js"></script>
+<script>
+(function () {
+  'use strict';
+  var FRAMEABLE = [/\.github\.io$/, /\.web\.app$/, /\.firebaseapp\.com$/, /\.netlify\.app$/, /\.vercel\.app$/, /\.pages\.dev$/];
+  var id = new URLSearchParams(location.search).get('id') || '';
+  var store = window.BoardStore.create();
+  var stage = document.getElementById('stage');
+  function $(s) { return document.getElementById(s); }
+  function hostOf(url) { try { return new URL(url).hostname.toLowerCase(); } catch (e) { return ''; } }
+
+  function message(title, text, href, label) {
+    $('vMsgTitle').textContent = title; $('vMsgText').textContent = text;
+    var a = $('vMsgLink'); a.href = href || 'index.html'; a.textContent = label || '보드로 돌아가기';
+    if (href) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+    $('vMsg').hidden = false;
+  }
+  function show(kind, value) {
+    var f = document.createElement('iframe');
+    f.title = '발표 화면';
+    f.setAttribute('allowfullscreen', '');
+    f.setAttribute('referrerpolicy', 'no-referrer');
+    if (kind === 'code') {
+      // 붙여 넣은 코드는 이 사이트와 분리된 채로 돈다(allow-same-origin 을 주지 않음).
+      // 발표 안의 링크는 새 탭으로 열 수 있게 팝업만 허용한다.
+      f.setAttribute('sandbox', 'allow-scripts allow-popups allow-popups-to-escape-sandbox');
+      f.srcdoc = value;
+    } else {
+      f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+      f.src = value;
+    }
+    f.addEventListener('load', function () { try { f.focus(); } catch (e) { /* 무시 */ } });
+    stage.appendChild(f);
+  }
+
+  $('vFull').addEventListener('click', function () {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (stage.requestFullscreen) stage.requestFullscreen();
+  });
+
+  if (!id) { $('vTitle').textContent = '발표를 찾을 수 없습니다'; message('주소에 발표 번호가 없습니다', '보드에서 카드를 눌러 들어와 주세요.'); return; }
+
+  store.getDeck(id).then(function (d) {
+    if (!d) { $('vTitle').textContent = '결과물을 찾을 수 없습니다'; message('이 결과물은 보드에서 지워졌습니다', '올린 사람이 지웠거나 주소가 바뀌었습니다.'); return; }
+    document.title = d.title + ' — ' + d.name;
+    $('vTitle').textContent = d.title;
+    $('vName').textContent = d.name;
+    var realUrl = d.url && !d.sample ? d.url : '';
+    if (realUrl) { $('vOpen').href = realUrl; $('vOpen').hidden = false; }
+    if (d.hasCode) {
+      return store.getCode(id).then(function (code) {
+        if (code) show('code', code);
+        else if (realUrl) message('미리보기 코드가 없습니다', '원래 주소에서 열어 주세요.', realUrl, '원래 주소 열기');
+        else message('미리보기 코드가 없습니다', '올린 사람이 코드를 지웠습니다.');
+      });
+    }
+    if (realUrl && FRAMEABLE.some(function (r) { return r.test(hostOf(realUrl)); })) show('url', realUrl);
+    else if (realUrl) message('이 주소는 여기 안에 넣어 볼 수 없습니다', 'Google Sites나 Gemini 공유 링크는 다른 사이트 안에서 열리지 않게 막혀 있습니다. 새 탭에서 열어 주세요.', realUrl, '새 탭에서 열기');
+    else message('열 수 있는 내용이 없습니다', '데모용 예시 카드입니다.');
+  }).catch(function () {
+    $('vTitle').textContent = '불러오지 못했습니다';
+    message('발표를 불러오지 못했습니다', '인터넷 연결을 확인하고 새로 고쳐 주세요.');
+  });
+})();
+</script>
+</body>
+</html>

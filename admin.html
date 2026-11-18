@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>제출 현황 — 담당자용</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23ECE8DF'/%3E%3Crect x='5' y='8' width='22' height='16' fill='%23fff' stroke='%2317161A' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@600;800&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+  .a-wrap { max-width: 1280px; margin: 0 auto; padding: 34px clamp(18px, 4vw, 56px) 80px; }
+  .a-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; border-bottom: 2px solid var(--ink); padding-bottom: 14px; margin-bottom: 26px; }
+  .a-top h1 { font-family: var(--serif); font-weight: 800; font-size: clamp(26px, 3vw, 38px); letter-spacing: -.04em; }
+  .a-top .sub { font-size: 14px; color: var(--ink-2); }
+  .a-top a { margin-left: auto; font-size: 14px; font-weight: 700; color: var(--ink); }
+  .gate { max-width: 520px; }
+  .gate .row { display: flex; gap: 10px; align-items: flex-end; }
+  .gate .field { flex: 1; margin-bottom: 0; }
+  .a-note { font-size: 13.5px; color: var(--ink-2); line-height: 1.7; margin-top: 16px; }
+  .a-stats { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+  .a-stat { background: var(--paper); border: 1px solid var(--ink); padding: 12px 18px 10px; min-width: 150px; }
+  .a-stat b { display: block; font-family: var(--serif); font-size: 34px; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; }
+  .a-stat span { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+  .a-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+  .a-bar .sp { flex: 1; }
+  .seg2 { display: inline-flex; border: 1px solid var(--ink); }
+  .seg2 button { font: inherit; font-size: 13px; font-weight: 700; padding: 8px 13px; background: var(--paper); border: 0; cursor: pointer; color: var(--ink); }
+  .seg2 button + button { border-left: 1px solid var(--ink); }
+  .seg2 button.on { background: var(--ink); color: #fff; }
+  .a-table { width: 100%; border-collapse: collapse; background: var(--paper); border: 1px solid var(--ink); font-size: 14.5px; }
+  .a-table th { text-align: left; font-size: 12.5px; font-weight: 700; padding: 10px 12px; border-bottom: 2px solid var(--ink); white-space: nowrap; }
+  .a-table td { padding: 10px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.5; overflow-wrap: anywhere; }
+  .a-table tr:last-child td { border-bottom: 0; }
+  .a-table td.num { color: var(--mute); width: 44px; font-variant-numeric: tabular-nums; }
+  .a-table td.sid { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .a-table td.who { font-weight: 700; min-width: 110px; }
+  .a-table td.url a { color: var(--ink); }
+  .a-table td.time { white-space: nowrap; color: var(--ink-2); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .a-table td.code { white-space: nowrap; }
+  .a-table td.empty { text-align: center; color: var(--mute); padding: 34px 12px; }
+  .miss { color: var(--accent-ink); font-weight: 600; }
+  .mini { font: inherit; font-size: 12.5px; font-weight: 700; padding: 5px 10px; background: #fff; border: 1px solid var(--ink); cursor: pointer; color: var(--ink); }
+  .mini:hover { background: var(--ink); color: #fff; }
+  .mini-link { font-size: 12.5px; font-weight: 700; margin-left: 10px; color: var(--ink); }
+  .a-scroll { overflow-x: auto; }
+  .a-foot { font-size: 13px; color: var(--mute); margin-top: 10px; display: flex; flex-wrap: wrap; gap: 4px 18px; }
+</style>
+</head>
+<body>
+
+<div class="a-wrap">
+  <div class="a-top">
+    <h1>제출 현황</h1>
+    <span class="sub" id="aCourse"></span>
+    <span class="chip" id="aDemo" hidden>데모 모드</span>
+    <a href="index.html?wall=1">보드 보기 →</a>
+  </div>
+
+  <!-- 관리 코드 -->
+  <div class="panel gate" id="gate">
+    <h3>담당자 확인</h3>
+    <p class="desc">관리 코드를 적으면 제출한 사람의 목록과 학번이 보이고, 결과물을 한 번에 내려받을 수 있습니다.</p>
+    <form id="gateForm" novalidate>
+      <div class="row">
+        <label class="field"><span>관리 코드 <i>*</i></span>
+          <input id="aCode" type="password" autocomplete="off" maxlength="80"></label>
+        <button class="btn primary" id="gateBtn" type="submit">열기</button>
+      </div>
+      <p class="status" id="gateStatus" role="status" aria-live="polite"></p>
+    </form>
+    <p class="a-note">학번은 보드에 보이지 않습니다. 이 화면에서도 관리 코드가 맞을 때만 읽을 수 있습니다. 공용 컴퓨터에서는 다 쓴 뒤 창을 닫아 주세요.</p>
+  </div>
+
+  <!-- 목록 -->
+  <div id="dash" hidden>
+    <div class="a-stats">
+      <div class="a-stat"><b id="aCount">0</b><span>제출</span></div>
+      <div class="a-stat"><b id="aCodeCount">0</b><span>HTML 코드까지 낸 제출</span></div>
+      <div class="a-stat"><b id="aNoSid">0</b><span>학번이 없는 제출</span></div>
+    </div>
+    <div class="a-bar">
+      <div class="seg2" role="group" aria-label="줄 세우기">
+        <button type="button" data-sort="time" class="on" aria-pressed="true">올린 순</button>
+        <button type="button" data-sort="sid" aria-pressed="false">학번 순</button>
+        <button type="button" data-sort="name" aria-pressed="false">이름 순</button>
+      </div>
+      <span class="sp"></span>
+      <button class="btn line" id="csvBtn" type="button" disabled>목록 내려받기 (CSV)</button>
+      <button class="btn primary" id="zipBtn" type="button" disabled>결과물 전체 내려받기 (ZIP)</button>
+    </div>
+    <p class="status" id="dashStatus" role="status" aria-live="polite"></p>
+    <div class="a-scroll">
+      <table class="a-table">
+        <thead><tr><th>번호</th><th>학번</th><th>이름 또는 조</th><th>발표 제목</th><th>발표 주소</th><th>HTML 코드</th><th>올린 시각</th></tr></thead>
+        <tbody id="aRows"></tbody>
+      </table>
+    </div>
+    <div class="a-foot">
+      <span id="aUpdated"></span>
+      <span>새로 올라오면 목록이 저절로 바뀝니다.</span>
+      <span>ZIP에는 목록(CSV)과 사람마다 HTML 파일 하나가 들어갑니다. 주소만 낸 제출은 그 주소로 넘어가는 파일이 들어갑니다.</span>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="samples.js"></script>
+<script src="store.js"></script>
+<script src="zip.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

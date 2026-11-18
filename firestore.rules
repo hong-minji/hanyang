@@ -1,0 +1,131 @@
+rules_version = '2';
+
+// 공유보드 보안 규칙
+//  - 읽기: 누구나
+//  - 쓰기: 익명 로그인한 브라우저가 '자기 것'만. 올리기와 고치기는 meta/board 의 open 이 true 일 때만.
+//          (내리기는 접수가 닫힌 뒤에도 됩니다.)
+//  - meta/board 는 Firebase 콘솔에서만 고칠 수 있습니다(접수 열기·닫기).
+//  - 학번은 decks/{id}/private/main 에 따로 둡니다. 올린 사람과 '관리자'만 읽습니다.
+//  - 관리자: 대시보드(admin.html)에서 적은 관리 코드가 secret/admin 의 key 와 같은 브라우저.
+//    secret/admin 은 Firebase 콘솔에서만 만들고 고칩니다(화면에서는 읽을 수도 쓸 수도 없습니다).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/secret/admin)
+        && exists(/databases/$(database)/documents/claims/$(request.auth.uid))
+        && get(/databases/$(database)/documents/secret/admin).data.key is string
+        && get(/databases/$(database)/documents/secret/admin).data.key.size() >= 8
+        && get(/databases/$(database)/documents/claims/$(request.auth.uid)).data.key
+           == get(/databases/$(database)/documents/secret/admin).data.key;
+    }
+
+    function boardOpen() {
+      return exists(/databases/$(database)/documents/meta/board)
+        && get(/databases/$(database)/documents/meta/board).data.open == true;
+    }
+
+    function validDeck(d) {
+      return d.keys().hasOnly(['name', 'title', 'url', 'note', 'hasCode', 'uid', 'createdAt', 'updatedAt'])
+        && d.keys().hasAll(['name', 'title', 'url', 'note', 'hasCode', 'uid', 'createdAt', 'updatedAt'])
+        && d.name is string && d.name.size() >= 1 && d.name.size() <= 30
+        && d.title is string && d.title.size() >= 1 && d.title.size() <= 60
+        && d.url is string && d.url.size() <= 500
+        && (d.url == '' || d.url.matches('^https://.+'))
+        && d.note is string && d.note.size() <= 80
+        && d.hasCode is bool
+        && (d.url != '' || d.hasCode == true)
+        && d.uid == request.auth.uid
+        && d.createdAt is timestamp
+        && d.updatedAt == request.time;
+    }
+
+    match /meta/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // 관리 코드. 콘솔에서만 만들고 고칩니다.
+    match /secret/{docId} {
+      allow read, write: if false;
+    }
+
+    // 대시보드에서 적은 관리 코드(브라우저마다 자기 것만 읽고 씁니다).
+    match /claims/{uid} {
+      allow read, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['key', 'updatedAt'])
+        && request.resource.data.key is string
+        && request.resource.data.key.size() <= 80
+        && request.resource.data.updatedAt == request.time;
+    }
+
+    // 관리 코드가 맞는지 대시보드가 확인하는 자리(문서는 없어도 됩니다).
+    match /adminCheck/{docId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /decks/{deckId} {
+      allow read: if true;
+
+      allow create: if signedIn()
+        && boardOpen()
+        && validDeck(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+
+      allow update: if signedIn()
+        && boardOpen()
+        && resource.data.uid == request.auth.uid
+        && validDeck(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt;
+
+      allow delete: if signedIn()
+        && resource.data.uid == request.auth.uid;
+
+      // 미리보기용 HTML 코드. 카드가 화면에 보일 때만 읽어 옵니다.
+      match /code/{part} {
+        allow read: if true;
+
+        allow create, update: if signedIn()
+          && boardOpen()
+          && part == 'main'
+          && getAfter(/databases/$(database)/documents/decks/$(deckId)).data.uid == request.auth.uid
+          && request.resource.data.keys().hasOnly(['html', 'uid', 'updatedAt'])
+          && request.resource.data.html is string
+          && request.resource.data.html.size() <= 900000
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.updatedAt == request.time;
+
+        allow delete: if signedIn()
+          && (resource == null || resource.data.uid == request.auth.uid);
+      }
+
+      // 학번. 보드에는 보이지 않습니다.
+      match /private/{part} {
+        allow read: if isAdmin()
+          || (signedIn() && resource != null && resource.data.uid == request.auth.uid);
+
+        allow create, update: if signedIn()
+          && boardOpen()
+          && part == 'main'
+          && getAfter(/databases/$(database)/documents/decks/$(deckId)).data.uid == request.auth.uid
+          && request.resource.data.keys().hasOnly(['studentId', 'uid', 'updatedAt'])
+          && request.resource.data.studentId is string
+          && request.resource.data.studentId.size() >= 1
+          && request.resource.data.studentId.size() <= 20
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.updatedAt == request.time;
+
+        allow delete: if signedIn()
+          && (resource == null || resource.data.uid == request.auth.uid);
+      }
+    }
+  }
+}

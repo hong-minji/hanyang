@@ -312,6 +312,19 @@
   }
   var tryTimer, tryNav = navButtons($('#tryShot'));
   $('#tryCtl').appendChild(tryNav);
+  ro.observe($('#tryShot'));   // 접혀 있다가 펼쳐질 때 미리보기 크기를 다시 맞춘다
+
+  /* 올리기 칸은 평소에 접혀 있다. 버튼, 머리글의 ‘결과물 올리기’, 카드의 ‘고치기’가 펼친다. */
+  function setSubmitOpen(on) {
+    $('#submit').classList.toggle('open', on);
+    $('#submitBody').hidden = !on;
+    var t = $('#submitToggle');
+    t.setAttribute('aria-expanded', String(on));
+    t.textContent = on ? '접기' : '올리기 열기';
+    t.classList.toggle('primary', !on); t.classList.toggle('line', on);
+    if (on) fit($('#tryShot'));
+  }
+  $('#submitToggle').addEventListener('click', function () { setSubmitOpen($('#submitBody').hidden); });
   function updateTry() {
     clearTimeout(tryTimer);
     tryTimer = setTimeout(function () {
@@ -371,6 +384,7 @@
     job.then(function (id) {
       state.flashId = id;
       resetForm();
+      setSubmitOpen(false);   // 올린 뒤에는 접고, 아래 보드의 내 카드로 간다
       setStatus('#deckStatus', editing ? '고친 내용이 반영됐습니다.' : '공유됐습니다. 아래 보드에서 확인하세요.', 'ok');
       toast(editing ? '고친 내용이 반영됐습니다.' : '공유됐습니다.');
       render();
@@ -396,6 +410,7 @@
     $('#cancelEdit').hidden = false;
     setStatus('#deckStatus', d.hasCode ? '올려 둔 코드를 불러오는 중입니다…' : '', '');
     updateCodeSize(); updateTry();
+    setSubmitOpen(true);
     $('#submit').scrollIntoView({ behavior: 'smooth', block: 'start' });
     if (d.hasCode) {
       getCode(d).then(function (code) {
@@ -475,6 +490,7 @@
     a.addEventListener('click', function () {
       var go = a.dataset.go;
       if (go !== 'wall' && document.body.classList.contains('wall-only')) setWallOnly(false);
+      if (go === 'submit') setSubmitOpen(true);
       setTimeout(function () { var f = go === 'mail' ? $('#mEmail') : go === 'submit' ? fName : null; if (f) f.focus({ preventScroll: true }); }, 500);
     });
   });
@@ -489,8 +505,9 @@
       INFO.boardTitle.forEach(function (t) { h.appendChild(el('span', '', t)); });
       document.title = INFO.boardTitle.join(' ');
     }
-    if (LINKS.guideUrl) { $('#guideLink').href = LINKS.guideUrl; $('#guideLink').hidden = false; }
-    if (LINKS.materialsUrl) { $('#materialsLink').href = LINKS.materialsUrl; $('#materialsLink').hidden = false; }
+    ['#guideLink', '#guideLink2'].forEach(function (id) { if (LINKS.guideUrl) { $(id).href = LINKS.guideUrl; $(id).hidden = false; } });
+    ['#materialsLink', '#materialsLink2'].forEach(function (id) { if (LINKS.materialsUrl) { $(id).href = LINKS.materialsUrl; $(id).hidden = false; } });
+    if (location.hash === '#submit') setSubmitOpen(true);
     $('#fine').textContent = [INFO.school, INFO.course, INFO.lecture, INFO.date].filter(Boolean).join(' · ');
     if (store.mode === 'demo') {
       $('#demoChip').hidden = false;

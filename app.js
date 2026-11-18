@@ -68,8 +68,6 @@
     var hm = pad(d.getHours()) + ':' + pad(d.getMinutes());
     return d.toDateString() === now.toDateString() ? hm : (d.getMonth() + 1) + '. ' + d.getDate() + '. ' + hm;
   }
-  function viewerHref(id) { return 'view.html?id=' + encodeURIComponent(id); }
-
   var toastTimer;
   function toast(msg) {
     var t = $('#toast'); t.textContent = msg; t.classList.add('on');
@@ -89,17 +87,25 @@
     box.appendChild(el('div', 'po-name', d.name || '이름 또는 조'));
     return box;
   }
+  // 카드의 ‹ › 버튼이 보낸 신호를 받아, 미리보기 안의 발표에 ← → 키를 대신 눌러 준다(코드 미리보기에만 넣는다).
+  var BRIDGE = '<script>(function(){function press(key,code){["keydown","keyup"].forEach(function(t){var e;' +
+    'try{e=new KeyboardEvent(t,{key:key,code:key,bubbles:true,cancelable:true});}catch(x){return;}' +
+    'try{Object.defineProperty(e,"keyCode",{get:function(){return code;}});Object.defineProperty(e,"which",{get:function(){return code;}});}catch(x){}' +
+    '(document.body||document.documentElement).dispatchEvent(e);});}' +
+    'addEventListener("message",function(e){if(e.source!==parent)return;var d=e.data;if(!d||d.board!=="nav")return;' +
+    'if(d.dir==="next")press("ArrowRight",39);else if(d.dir==="prev")press("ArrowLeft",37);});})();<\/script>';
+
   function frameFor(kind, value) {
     var f = document.createElement('iframe');
     f.setAttribute('tabindex', '-1');
-    f.setAttribute('aria-hidden', 'true');
     f.setAttribute('scrolling', 'no');
     f.setAttribute('referrerpolicy', 'no-referrer');
-    f.title = '미리보기';
+    f.title = '미리보기 — 안을 눌러 직접 넘겨 볼 수 있습니다';
+    f._kind = kind;
     if (kind === 'code') {
       // 스크립트는 돌지만 이 사이트의 저장소·쿠키에는 닿지 못한다(allow-same-origin 을 주지 않음).
       f.setAttribute('sandbox', 'allow-scripts');
-      f.srcdoc = value + '<style>html,body{overflow:hidden!important}::-webkit-scrollbar{display:none!important}</style>';
+      f.srcdoc = value + '<style>html,body{overflow:hidden!important}::-webkit-scrollbar{display:none!important}</style>' + BRIDGE;
     } else {
       f.setAttribute('sandbox', 'allow-scripts allow-same-origin');
       f.src = value;
@@ -111,6 +117,28 @@
     if (f && shot.clientWidth) f.style.transform = 'scale(' + (shot.clientWidth / 1280) + ')';
   }
   var ro = new ResizeObserver(function (entries) { entries.forEach(function (e) { fit(e.target); }); });
+
+  // 미리보기 아래의 ‹ › 버튼. 붙여 넣은 코드로 띄운 미리보기에서만 쓴다.
+  function navButtons(shot) {
+    var box = el('div', 'ctl-nav');
+    [['prev', '‹', '이전 장'], ['next', '›', '다음 장']].forEach(function (b) {
+      var btn = el('button', 'nav-btn', b[1]); btn.type = 'button'; btn.title = b[2]; btn.setAttribute('aria-label', b[2]);
+      btn.addEventListener('click', function () {
+        var f = shot.querySelector('iframe');
+        if (f && f._kind === 'code' && f.contentWindow) f.contentWindow.postMessage({ board: 'nav', dir: b[0] }, '*');
+      });
+      box.appendChild(btn);
+    });
+    box.hidden = true;
+    return box;
+  }
+  function syncNav(shot, nav) {
+    var f = shot.querySelector('iframe');
+    nav.hidden = !(f && f._kind === 'code');
+    // 버튼 줄에 보일 것이 하나도 없으면 줄째로 숨긴다.
+    var row = nav.parentNode;
+    if (row) row.hidden = !Array.prototype.some.call(row.children, function (c) { return !c.hidden; });
+  }
 
   function previewKey(d) {
     if (d.hasCode) return 'c:' + d.updatedAt;
@@ -134,12 +162,14 @@
         shot.classList.remove('loading'); clear(shot);
         if (code) { shot.appendChild(frameFor('code', code)); fit(shot); }
         else shot.appendChild(poster(d));
+        syncNav(shot, card._nav);
       });
     } else if (hostInfo(d.url).frameable) {
       shot.appendChild(frameFor('url', d.url)); fit(shot);
     } else {
       shot.appendChild(poster(d));
     }
+    syncNav(shot, card._nav);
   }
   function unmount(card) {
     // 화면에서 멀어진 iframe 은 내려서 브라우저를 가볍게 한다. 포스터는 가벼우니 둔다.
@@ -156,22 +186,24 @@
   /* ---------- 카드 ---------- */
   function buildCard(d) {
     var art = el('article', 'piece');
-    var a = el('a', 'frame'); a.target = '_blank'; a.rel = 'noopener noreferrer';
+    var frame = el('div', 'frame');
     var shot = el('div', 'shot'); shot._card = art;
-    var open = el('span', 'open');
-    a.appendChild(shot); a.appendChild(el('span', 'shield')); a.appendChild(open);
+    // 미리보기 아래의 버튼 줄: ‹ › (넘겨 보기) · 사이트 바로 가기
+    var ctl = el('div', 'ctl'), nav = navButtons(shot);
+    var site = el('a', 'site-btn', '사이트 바로 가기 ↗'); site.target = '_blank'; site.rel = 'noopener noreferrer';
+    ctl.appendChild(nav); ctl.appendChild(site);
+    frame.appendChild(shot); frame.appendChild(ctl);
 
     var plaque = el('div', 'plaque');
     var no = el('span', 'no');
     var title = el('h3'), who = el('p', 'who'), memo = el('p', 'memo'), meta = el('div', 'meta');
     plaque.appendChild(no); plaque.appendChild(title); plaque.appendChild(who); plaque.appendChild(memo); plaque.appendChild(meta);
-    art.appendChild(a); art.appendChild(plaque);
+    art.appendChild(frame); art.appendChild(plaque);
 
-    art._a = a; art._shot = shot; art._open = open; art._no = no; art._title = title; art._who = who; art._memo = memo; art._meta = meta;
+    art._shot = shot; art._nav = nav; art._site = site; art._no = no; art._title = title; art._who = who; art._memo = memo; art._meta = meta;
 
-    a.addEventListener('click', function (ev) {
-      var cur = art._deck;
-      if (cur.sample && !cur.hasCode) { ev.preventDefault(); toast('데모용 예시 카드라서 열리는 주소가 없습니다.'); }
+    site.addEventListener('click', function (ev) {
+      if (art._deck.sample) { ev.preventDefault(); toast('데모용 예시 카드라서 열리는 주소가 없습니다.'); }
     });
     updateCard(art, d);
     return art;
@@ -180,24 +212,19 @@
   function updateCard(card, d) {
     card._deck = d;
     var info = hostInfo(d.url);
-    var useViewer = !d.url || (d.sample && d.hasCode);
-    card._a.href = useViewer ? viewerHref(d.id) : d.url;
-    if (d.sample && !d.hasCode) card._a.href = '#wall';
-    card._open.textContent = useViewer ? '크게 보기 ↗' : '사이트 열기 ↗';
-    card._a.setAttribute('aria-label', d.name + '의 발표 “' + d.title + '” 열기');
+    // 사이트 바로 가기: 적어 낸 주소를 새 탭으로 연다(주소를 내지 않았으면 버튼이 없다).
+    card._site.hidden = !d.url;
+    card._site.href = d.url && !d.sample ? d.url : '#wall';
+    card._site.setAttribute('aria-label', d.name + '의 결과물 “' + d.title + '” 사이트 바로 가기');
     card._title.textContent = d.title;
     card._who.textContent = d.name;
     card._memo.textContent = d.note; card._memo.hidden = !d.note;
 
     var meta = card._meta; clear(meta);
     var mine = !!store.uid && d.uid === store.uid;
-    if (mine) meta.appendChild(el('span', 'tag mine', '내 발표'));
+    if (mine) meta.appendChild(el('span', 'tag mine', '내 결과물'));
     meta.appendChild(el('span', 'tag', info.label));
     meta.appendChild(el('span', '', timeText(d.createdAt)));
-    if (d.hasCode && d.url && !d.sample) {
-      var big = el('a', 'text-btn', '미리보기 크게'); big.href = viewerHref(d.id); big.target = '_blank'; big.rel = 'noopener';
-      meta.appendChild(big);
-    }
     if (mine) {
       meta.appendChild(el('span', 'sp'));
       var edit = el('button', 'text-btn', '고치기'); edit.type = 'button';
@@ -211,8 +238,9 @@
       });
       meta.appendChild(edit); meta.appendChild(del);
     }
-    // 포스터는 가벼우니 바로 걸고, 코드·주소 미리보기는 화면 가까이 왔을 때만 띄운다.
+    // 포스터는 가벼우니 바로 띄우고, 코드·주소 미리보기는 화면 가까이 왔을 때만 띄운다.
     if (card._near || previewKey(d).charAt(0) === 'p') mount(card);
+    syncNav(card._shot, card._nav);
   }
 
   function match(d, q) {
@@ -282,7 +310,8 @@
     node.textContent = kb(n) + ' KB / 900 KB';
     node.classList.toggle('over', n > LIMIT.codeBytes);
   }
-  var tryTimer;
+  var tryTimer, tryNav = navButtons($('#tryShot'));
+  $('#tryCtl').appendChild(tryNav);
   function updateTry() {
     clearTimeout(tryTimer);
     tryTimer = setTimeout(function () {
@@ -296,6 +325,7 @@
       if (f.code && bytes(f.code) <= LIMIT.codeBytes) { shot.appendChild(frameFor('code', f.code)); fit(shot); }
       else if (d.url && hostInfo(d.url).frameable) { shot.appendChild(frameFor('url', d.url)); fit(shot); }
       else shot.appendChild(poster(d));
+      syncNav(shot, tryNav);
     }, 350);
   }
   [fName, fTitle, fUrl, fNote, fCode].forEach(function (n) { n.addEventListener('input', updateTry); });

@@ -41,7 +41,7 @@ window.BOARD_CONFIG = {
 
   // 실습 메일 보내기(Apps Script 웹 앱)
   mail: {
-    url: '',              // 배포한 웹 앱 주소(…/exec). 비워 두면 '아직 연결되지 않음'으로 보입니다.
+    url: 'https://script.google.com/macros/s/AKfycbzvSc1LROE4W8jEZZ8XxAdl9pRZAr2nb5U9FeTh0t4d_PiYFdPdMZWeVKY5h20Lzy3b/exec',   // 배포한 웹 앱 주소(…/exec). 비워 두면 '아직 연결되지 않음'으로 보입니다.
     askClassCode: true    // true면 수업 코드 입력 칸이 보입니다(Apps Script에 CLASS_CODE를 넣었을 때).
   }
 };

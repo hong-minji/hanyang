@@ -36,12 +36,12 @@
       <div>
         <p class="eyebrow" id="eyebrow"></p>
         <h1 id="boardTitle"><span>공유보드</span></h1>
-        <p class="lead">오늘 만든 <b>결과물</b>을 올리면 이 보드에 모입니다.<br>카드를 누르면 그 사람의 발표가 열립니다.</p>
+        <p class="lead">오늘 만든 <b>결과물</b>을 올리면 이 보드에 모입니다.<br>미리보기 안에서 바로 넘겨 볼 수 있습니다.</p>
       </div>
       <ol class="steps">
         <li><span class="n">01</span><b>실습 메일 받기</b><p>메일 주소를 넣으면 Gmail 실습에 쓸 메일이 옵니다.</p></li>
         <li><span class="n">02</span><b>내 결과물 올리기</b><p>이름, 학번, 제목, 주소를 적고 공유합니다.</p></li>
-        <li><span class="n">03</span><b>서로 살펴보기</b><p>다른 사람의 결과물을 눌러 열어 봅니다.</p></li>
+        <li><span class="n">03</span><b>서로 살펴보기</b><p>다른 사람의 결과물을 미리보기에서 넘겨 봅니다.</p></li>
       </ol>
     </div>
   </section>
@@ -66,7 +66,7 @@
               <input id="mCode" type="text" autocomplete="off" maxlength="30"></label>
             <div class="actions">
               <button class="btn" id="mailBtn" type="submit">메일 받기</button>
-              <a class="text-btn" href="apps-script/%EC%8B%A4%EC%8A%B5%20%EB%A9%94%EC%9D%BC_%EB%AF%B8%EB%A6%AC%EB%B3%B4%EA%B8%B0.html" target="_blank" rel="noopener">어떤 메일이 오나요?</a>
+              <a class="text-btn" href="mail-preview.html" target="_blank" rel="noopener">어떤 메일이 오나요?</a>
             </div>
             <p class="status" id="mailStatus" role="status" aria-live="polite"></p>
           </form>
@@ -111,7 +111,7 @@
             <aside class="try" aria-label="보드에 올라간 모습">
               <div class="try-label">보드에 이렇게 보입니다</div>
               <div class="piece" id="tryPiece" style="animation:none">
-                <div class="frame" style="cursor:default"><div class="shot" id="tryShot"></div></div>
+                <div class="frame"><div class="shot" id="tryShot"></div><div class="ctl" id="tryCtl" hidden></div></div>
                 <div class="plaque">
                   <span class="no">N° —</span>
                   <h3 id="tryTitle">발표 제목</h3>

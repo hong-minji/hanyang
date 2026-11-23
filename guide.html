@@ -38,12 +38,14 @@ ul.check{list-style:none;font-size:13px} ul.check li{padding-left:24px;position:
 .plabel{font-size:12px;font-weight:700;margin:12px 0 4px}
 pre.prompt{position:relative;background:#f9f9f7;border:1px solid #ececea;border-left:3px solid #1a1a1a;padding:14px 64px 14px 16px;font-family:inherit;font-size:12.5px;line-height:1.7;white-space:pre-wrap;break-inside:avoid}
 .copy{position:absolute;top:8px;right:8px;font:inherit;font-size:11px;border:1px solid #ccc;background:#fff;padding:3px 10px;cursor:pointer;color:#555} .copy.done{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+ul.links{list-style:none;font-size:13px} ul.links li{margin-bottom:4px;padding-left:16px;position:relative} ul.links li::before{content:"→";position:absolute;left:0;color:#999} ul.links a{color:#1a1a1a;font-weight:700;text-decoration:underline;text-underline-offset:2px;word-break:break-all} ul.links span{color:#555}
+table.sites{font-size:12.5px} table.sites th,table.sites td{padding:7px 10px 7px 0} table.sites td a{color:#1a1a1a;font-weight:600;word-break:break-all} .sites-page{break-before:page}
 .stuck{margin-top:14px;font-size:12.5px;background:#fff8ee;border-left:3px solid #f59e0b;padding:10px 14px;color:#7c3c0b}
 .note{font-size:12.5px;color:#555;border-left:3px solid #1a1a1a;padding:10px 14px;background:#f9f9f7;margin-top:12px}
 details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
 .foot{margin-top:56px;padding-top:12px;border-top:1px solid #ececea;font-size:10.5px;color:#999;display:flex;justify-content:space-between}
 .bar{position:fixed;top:20px;right:20px} .bar button{font:inherit;font-size:13px;padding:8px 18px;border:1px solid #1a1a1a;background:#1a1a1a;color:#fff;cursor:pointer}
-@media print{body{background:#fff} .wrap{margin:0;padding:0;box-shadow:none;max-width:none} .bar,.copy{display:none!important} *{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media print{.foot{margin-top:20px} body{background:#fff} .wrap{margin:0;padding:0;box-shadow:none;max-width:none} .bar,.copy{display:none!important} *{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
 </head>
 <body>
@@ -102,6 +104,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
   <p class="goal">Gemini에 내 Google을 연결하고, 실습 자료 폴더를 내 드라이브에 연결하고 내 폴더를 만들고, YouTube 채널을 만들어 둔다.</p>
   <h3>순서</h3><ol class="steps"><li>Gemini 왼쪽 메뉴 → 맞춤설정 → Google Workspace 옆 ＋ → 연결</li><li>실습 자료 폴더를 연다 → 폴더 이름 옆 ▾ → 정리 → 바로가기 추가 → 내 드라이브 — 내려받지 않는다</li><li>내 드라이브에 새 폴더 ‘발표_내이름’을 만들고, 그 안에 ‘에셋’ 폴더를 하나 더 만든다 — 실습 자료를 참고해 꾸리는 내 폴더. 오늘 만드는 구성안 · 에셋 · 발표 파일을 여기에 둔다</li><li>Gemini 새 채팅 → ＋ → Drive에서 파일 추가 → 실습자료(내 드라이브의 바로가기 또는 공유 문서함) → README.md → 요청문을 보낸다</li><li>youtube.com → 오른쪽 위 프로필 사진 → 채널 만들기 → 이름과 핸들 입력</li></ol>
   <h3>요청문</h3><div class="plabel">README 읽혀 보기</div><pre class="prompt">첨부한 README를 읽고 이 프로젝트를 세 줄로 요약해 줘.</pre>
+  <h3>참고 사이트</h3><ul class="links"><li><a href="https://drive.google.com/drive/folders/14GFGXmkmHGRQjvshUpT2kzQS2-O7Q7mW?usp=sharing" target="_blank" rel="noopener">drive.google.com/drive/folders/14GFGXmkmHGRQ…</a><span> — 실습 자료 폴더</span></li><li><a href="https://gemini.google.com" target="_blank" rel="noopener">gemini.google.com</a><span> — Gemini</span></li><li><a href="https://www.youtube.com" target="_blank" rel="noopener">youtube.com</a><span> — YouTube — 채널 만들기</span></li></ul>
   <h3>확인</h3><ul class="check"><li>내 드라이브에 ‘실습자료’ 바로가기와 ‘발표_내이름’ 폴더(안에 ‘에셋’)가 있는가</li><li>README의 세 줄 요약이 나오는가</li><li>YouTube 채널이 생겼는가</li></ul>
   <div class="stuck"><b>막히면</b> — 학교 계정에서 연결 메뉴나 YouTube가 막혀 있으면 개인 계정으로 바꿔서 합니다. ‘Drive에서 파일 추가’ 창에 실습자료가 안 보이면 그 창의 공유 문서함을 눌러 봅니다. 그래도 없으면 실습 자료 폴더에서 그 파일만 내려받아 ＋ → 파일 업로드로 줍니다.</div>
 </section><section class="lab" id="실습2">
@@ -112,6 +115,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
   <h3>요청문</h3><div class="plabel">메일 찾기</div><pre class="prompt">@Gmail ‘[실습용] 피지컬AI로봇 실습2 · 프로젝트 결과 발표 안내’ 메일을 찾아서 일시 · 장소 · 회신 마감을 표로 정리해 줘.</pre><div class="plabel">캘린더에 일정 등록 (메모 포함)</div><pre class="prompt">그 메일의 발표 일시와 회신 마감을 내 Google Calendar에 일정으로 추가해 줘.
 일정 메모에는 장소와 준비할 것을 적어 줘.</pre><div class="plabel">답장 초안</div><pre class="prompt">그 메일에 보낼 답장 초안을 써 줘. 팀명은 피지컬AI 2조, 발표 제목은 ‘던지면 받아 주는 쓰레기통 CatchBin’.
 발표 주소는 [발표 주소]로 비워 둬.</pre>
+  <h3>참고 사이트</h3><ul class="links"><li><a href="https://hong-minji.github.io/hanyang/" target="_blank" rel="noopener">hong-minji.github.io/hanyang</a><span> — 공유보드 — ‘실습 메일 받기’</span></li></ul>
   <h3>확인</h3><ul class="check"><li>일시 · 장소 · 회신 마감이 표로 나왔는가</li><li>캘린더에 일정 두 개가 생기고 메모에 장소가 들어갔는가</li><li>답장은 초안으로만 만들어졌는가</li></ul>
   <div class="stuck"><b>막히면</b> — ‘수업 코드가 맞지 않습니다’가 나오면 채팅의 코드를 다시 확인합니다(띄어쓰기 · 대소문자). 메일이 안 오면 스팸함과 주소 오타를 확인합니다. 일정이 잘못 만들어졌으면 알림의 ‘실행취소’를 누릅니다. Gmail 연결을 하지 않았으면 강사 화면으로 봅니다.</div>
 </section><section class="lab" id="실습3">
@@ -123,6 +127,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
 - 표지 + 내용 5장: 문제·목표 / 방법·구조 / 구현·실험 / 결과·근거 / 한계·결론
 - 장마다 제목은 주장 한 문장, 넣을 숫자와 시각자료를 한 줄씩
 - 숫자는 파일에 있는 것만 써 줘</pre>
+  
   <h3>확인</h3><ul class="check"><li>표지 + 내용 5장인가</li><li>‘발표 구성안’ 문서가 내 폴더에 있는가</li></ul>
   <div class="stuck"><b>막히면</b> — 결과가 늦거나 한도 안내가 뜨면 ‘준비본/발표 구성안_예시’를 내 폴더에 넣고 다음으로 갑니다.</div>
 </section><section class="lab" id="실습4">
@@ -132,6 +137,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
   <h3>순서</h3><ol class="steps"><li>Gemini 새 채팅 → ＋ → README.md와 발표 구성안을 첨부 → 요청문 보내기</li><li>결과는 두 가지 모양 중 하나로 나온다 — 같은 요청이어도 그때그때 다르다. 나온 모양대로 아래 둘 중 하나를 한다</li><li>대화에 .pptx 파일이 나오면: 내려받는다 → Drive의 내 폴더에 올리고 더블클릭 → Google Slides로 열린다 → 파일 → Google Slides로 저장</li><li>Canvas 슬라이드로 열리면: 내려받지 않고 ‘프레젠테이션으로 열기’를 누른다 → 바로 Google Slides로 열린다</li><li>생긴 Slides 파일을 내 폴더로 옮겨 둔다</li><li>손으로 고쳐 본다: 장표 순서를 끌어 바꾸기, 제목 고치기, 삽입 → 선 → 연결선</li><li>(시연) Apps Script로 만들기 — Gemini에게 코드를 받아 script.google.com → 새 프로젝트 → 붙여 넣기 → 실행 → 처음 한 번 권한 허용</li></ol>
   <h3>요청문</h3><div class="plabel">PPTX로 받기</div><pre class="prompt">첨부한 README와 구성안으로 발표자료를 PowerPoint(.pptx) 파일로 만들어 줘.
 표지 + 내용 5장, 깔끔한 파란색 계열로.</pre><div class="plabel">(시연) Apps Script 코드 받기</div><pre class="prompt">첨부한 구성안으로 Google Slides를 만드는 Apps Script 코드를 써 줘.</pre>
+  <h3>참고 사이트</h3><ul class="links"><li><a href="https://script.google.com" target="_blank" rel="noopener">script.google.com</a><span> — Apps Script(강사 시연)</span></li></ul>
   <h3>확인</h3><ul class="check"><li>표지 + 내용 5장이 Slides로 열리는가</li><li>손으로 한 군데를 고쳐 봤는가</li></ul>
   <div class="stuck"><b>막히면</b> — .pptx 파일도 Canvas 슬라이드도 안 나오면 ‘준비본/발표_슬라이드 초안.pptx’를 Drive에 올려 엽니다. Apps Script는 수업에서 강사 시연으로만 봅니다 — 무료 계정의 Gemini가 쓴 코드는 오류가 나기 쉽습니다. 수업 뒤에 해 보고 싶으면 ‘준비본/슬라이드 만들기_AppsScript’의 코드를 붙여 넣어 실행합니다(실행할 함수: createDraftSlides).</div>
 </section><section class="lab" id="실습5">
@@ -144,6 +150,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
 - 아이콘 8개: 카메라 · 예측 · 쓰레기통 · 바퀴 · 목표 · 기록 · 결과 · 시간
 - 숫자 카드와 차트: 성공률 75%, 예측 오차 6cm, 1차 50% → 2차 75% 막대
 - 모두 같은 색 · 선 굵기 · 그림체로, 첨부한 레퍼런스처럼</pre><div class="plabel">세트 다듬기 (예시)</div><pre class="prompt">세트 전체의 선을 조금 더 굵게 하고, ‘판단’ 아이콘은 포물선 모양으로 바꿔 줘.</pre><div class="plabel">에셋 시트 파일로 받기</div><pre class="prompt">이 에셋 세트를 ‘에셋 시트.html’ 파일 하나로 내려받을 수 있게 만들어 줘.</pre>
+  <h3>참고 사이트</h3><ul class="links"><li><a href="https://www.pinterest.com" target="_blank" rel="noopener">pinterest.com</a><span> — Pinterest — ‘diagram asset’ · ‘flowchart asset’으로 검색해 에셋 레퍼런스 찾기</span></li></ul>
   <h3>확인</h3><ul class="check"><li>도식 두 개(구조도 인지 → 판단 → 동작, 흐름도 4단계) · 아이콘 · 숫자 카드 · 차트가 모두 나왔는가</li><li>모두 같은 색 · 선 굵기 · 그림체인가</li><li>말로 다듬은 곳이 바뀌었는가</li><li>내 폴더의 ‘에셋’ 폴더에 ‘에셋 시트.html’이 있고, 브라우저로 열면 세트가 보이는가</li></ul>
   <div class="stuck"><b>막히면</b> — 구조도 순서가 틀리면 “구조도 순서를 인지 → 판단 → 동작으로 고쳐 줘”라고 합니다. 답이 길어 끊기면 “이어서 그려 줘”, 그래도 안 되면 아이콘을 빼고 도식 · 숫자부터 받은 뒤 “같은 그림체로 아이콘 8개를 더 그려 줘”라고 합니다. 파일이 안 나오면 Canvas의 코드 보기에서 전체를 복사해 메모장에 붙여 넣고 ‘에셋 시트.html’로 저장해 올립니다. 그림이 잘 안 나오면 ‘준비본/발표_완성 예시.html’의 장표를 캡처해 레퍼런스로 주고 다시 요청합니다.</div>
 </section><section class="lab" id="실습6">
@@ -157,6 +164,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
 - 디자인은 첨부한 레퍼런스 그림처럼, 내용은 README에서만
 - 표지 그림, 사진, 영상 자리는 비워 둬</pre><div class="plabel">고치기 예 ①</div><pre class="prompt">글자가 전체적으로 작아. 좀 키워 줘.</pre><div class="plabel">고치기 예 ②</div><pre class="prompt">3번 장표가 너무 빽빽해. 글을 반으로 줄여 줘.</pre><div class="plabel">고치기 예 ③</div><pre class="prompt">결과 장표가 밋밋해. 75%가 한눈에 들어오게 해 줘.</pre><div class="plabel">(선택) 디자인을 통째로 바꾸기 — 레퍼런스 그림을 첨부하고</div><pre class="prompt">이 발표자료의 디자인을 첨부한 그림처럼 바꿔 줘. 내용과 숫자는 그대로 둬.</pre><div class="plabel">(선택) 눈누에서 고른 글꼴을 제목에 — noonnu.cc 글꼴 페이지의 ‘웹폰트로 사용’ 코드를 아래에 붙인다</div><pre class="prompt">제목 글꼴을 아래 웹폰트로 바꿔 줘. 본문 글꼴은 그대로 둬.
 (눈누에서 복사한 @font-face 코드 붙여 넣기)</pre>
+  <h3>참고 사이트</h3><ul class="links"><li><a href="https://github.com/zarazhangrui/frontend-slides" target="_blank" rel="noopener">github.com/zarazhangrui/frontend-slides</a><span> — HTML 발표 디자인 모음. 미리보기 그림을 캡처하거나 스타일 이름으로 말한다</span></li><li><a href="https://noonnu.cc" target="_blank" rel="noopener">noonnu.cc</a><span> — 눈누 — 무료 한글 글꼴. 글꼴 페이지의 ‘웹폰트로 사용’ 코드를 복사해 요청문 아래에 붙인다</span></li></ul>
   <h3>확인</h3><ul class="check"><li>표지 + 내용 5장이 → 키로 넘어가는가</li><li>장표마다 내 에셋 세트의 그림이 하나 이상 들어갔는가</li><li>그림체가 세트와 같은가(새로 그린 그림이 섞이지 않았는가)</li><li>레퍼런스와 비슷한 분위기이고, 내용은 CatchBin의 것인가(레퍼런스 그림 속 글이 섞이지 않았는가)</li><li>말로 고친 곳이 바뀌었는가</li></ul>
   <div class="stuck"><b>막히면</b> — 새 채팅에서 할 때는 내 폴더의 ‘에셋 시트.html’도 함께 올립니다 — 안 올라가면 Canvas의 코드 보기에서 코드를 복사해 요청문 아래에 붙여 넣습니다. 그림을 새로 그려 버리면 “그림은 방금 만든 세트의 것을 그대로 써 줘”, 에셋이 빠진 장표가 있으면 “2번 장표에도 세트의 아이콘을 넣어 줘”라고 합니다. 안 나오거나 한도 안내가 뜨면 ‘준비본/발표_초안.html’을 올리고 “이 파일을 Canvas에서 그대로 열어 줘”라고 합니다. 슬라이드 미리보기로 열렸으면 “HTML 웹페이지 파일 하나로 다시 만들어 줘”라고 합니다. 레퍼런스 그림 속 글(다른 프로젝트의 내용)이 섞여 나왔으면 “내용은 README에 있는 것만 써 줘”라고 합니다.</div>
 </section><section class="lab" id="실습7">
@@ -169,6 +177,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
 (Drive에서 복사한 표지 그림 링크)</pre><div class="plabel">사진 세 장 넣기</div><pre class="prompt">이 Drive 사진 세 장을 3번 장표의 사진 자리에 순서대로 넣어 줘.
 (사진 링크 세 개 — 던지기 전 · 이동 중 · 받음)</pre><div class="plabel">(소개) 영상 만들기 — 개인 계정 AI Plus 이상</div><pre class="prompt">바퀴 달린 흰 쓰레기통이 굴러가서, 날아오는 주황색 종이 뭉치를 받는 8초 영상을 만들어 줘.
 밝은 실내, 카메라는 고정. 글자와 자막은 넣지 마.</pre>
+  
   <h3>확인</h3><ul class="check"><li>표지에 그림이 보이는가</li><li>3번 장표에 사진 세 장이 순서대로 보이는가</li></ul>
   <div class="stuck"><b>막히면</b> — 그림이 안 보이면 공유 설정이 ‘제한됨’인지, 폴더 링크가 아니라 파일 링크인지 확인합니다. 저장이 안 되면 그림을 내려받아 Drive 폴더에 직접 올립니다. 학교 계정에서 바깥 공유가 막혀 있으면 개인 계정의 Drive에 올립니다.</div>
 </section><section class="lab" id="실습8">
@@ -179,6 +188,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
   <h3>요청문</h3><div class="plabel">영상 넣기</div><pre class="prompt">4번 장표의 영상 자리에 이 영상을 넣어 줘.
 영상 아래에 ‘원본 영상 열기’ 버튼도 넣어 줘.
 (YouTube 영상 주소 또는 Drive 영상 링크)</pre><div class="plabel">강사가 올려 둔 시연 영상 주소 — 내 YouTube 업로드가 어렵거나 오래 걸리면 이 주소를 그대로 씁니다</div><pre class="prompt">https://youtu.be/VxbXAXzb8M8</pre>
+  <h3>참고 사이트</h3><ul class="links"><li><a href="https://studio.youtube.com" target="_blank" rel="noopener">studio.youtube.com</a><span> — YouTube 스튜디오 — 만들기 → 동영상 업로드 → ‘일부 공개’</span></li></ul>
   <h3>확인</h3><ul class="check"><li>4번 장표에 영상 자리가 생겼는가</li><li>‘원본 영상 열기’ 버튼이 새 탭에서 열리는가</li></ul>
   <div class="stuck"><b>막히면</b> — Canvas 미리보기에서 YouTube 영상에 “오류 153”이 보이는 것은 정상입니다. 웹에 게시하면 재생됩니다. YouTube가 막혀 있으면 Drive 영상으로 합니다. YouTube 업로드가 어렵거나 오래 걸리면 위의 ‘강사가 올려 둔 시연 영상 주소’를 그대로 씁니다.</div>
 </section><section class="lab" id="실습9">
@@ -187,6 +197,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
   <p class="goal">발표자료를 Google Sites에 올려, 고쳐도 바뀌지 않는 내 주소를 만든다.</p>
   <h3>순서</h3><ol class="steps"><li>(먼저 해 보기) Canvas 오른쪽 위 공유 및 내보내기 → 공유 → 링크 복사 — 이 링크는 그 순간의 모습이라 고쳐도 바뀌지 않는다</li><li>길 A: 공유 및 내보내기 → Sites로 내보내기 → 열린 Sites에서 영상과 사진 확인 → 게시 → 웹 주소 입력 → 게시</li><li>길 B: Canvas에서 코드 전체 복사 → sites.google.com에서 새 사이트 → 오른쪽 위 ‘페이지’ 탭 → 아래쪽 ＋에 마우스를 올려 ‘전체 페이지 삽입’ → 페이지 이름 입력 → ‘코드 삽입’에 붙여 넣기 → 다음 → 삽입 → 페이지 이름 옆 ⋮ → 홈페이지로 설정 → 게시</li><li>게시한 주소를 복사한다 → 시크릿 창에서 열어 본다</li></ol>
   
+  <h3>참고 사이트</h3><ul class="links"><li><a href="https://sites.google.com" target="_blank" rel="noopener">sites.google.com</a><span> — Google Sites</span></li></ul>
   <h3>확인</h3><ul class="check"><li>로그인하지 않은 창(시크릿 창)에서 주소가 열리는가</li><li>사진과 영상이 보이는가</li></ul>
   <div class="stuck"><b>막히면</b> — 버튼이 없거나 내보냈더니 영상이 빠졌으면 길 B로 갑니다. 학교 계정에서 공개 게시가 안 되면 개인 계정으로 하거나, 실습 10에서 코드만 올립니다.</div>
 </section><section class="lab" id="실습10">
@@ -195,6 +206,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
   <p class="goal">내 결과물을 공유보드에 올리고, 다른 사람의 결과물을 본다.</p>
   <h3>순서</h3><ol class="steps"><li>공유보드 → ‘내 결과물 올리기’의 ‘올리기 열기’를 누른다</li><li>이름 · 학번 · 발표 제목 · 발표 주소를 넣는다 — 학번은 보드에 보이지 않고 강의 담당자만 본다</li><li>Canvas에서 코드 전체를 복사해 ‘발표 HTML 코드’ 칸에 붙여 넣는다 — 이 코드가 제출하는 결과물이 된다</li><li>공유하기를 누른다 → 아래 보드에서 내 카드를 확인한다</li><li>다른 결과물 두세 개를 미리보기 아래의 ‹ › 로 넘겨 본다</li></ol>
   
+  <h3>참고 사이트</h3><ul class="links"><li><a href="https://hong-minji.github.io/hanyang/" target="_blank" rel="noopener">hong-minji.github.io/hanyang</a><span> — 공유보드 — ‘내 결과물 올리기’</span></li></ul>
   <h3>확인</h3><ul class="check"><li>보드에 내 카드가 미리보기와 함께 보이는가(코드를 붙여 넣어야 미리보기가 보인다)</li><li>내 카드의 ‘사이트 바로 가기’를 누르면 내 발표가 열리는가</li></ul>
   <div class="stuck"><b>막히면</b> — 주소가 없으면 코드만 붙여 넣어도 됩니다. 카드의 미리보기에서 발표를 넘겨 볼 수 있습니다. 잘못 올렸으면 내 카드의 ‘고치기’나 ‘지우기’를 누릅니다(올린 브라우저에서만 됩니다).</div>
 </section><section class="lab" id="마무리">
@@ -206,6 +218,7 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
 영상 자리에는 영상 제목과 주소를 글로 남겨 줘.</pre><div class="plabel">(시연) 답장 초안에 발표 주소 넣기</div><pre class="prompt">1교시에 쓴 답장 초안의 [발표 주소]를 이 주소로 바꿔서 다시 써 줘.
 (게시한 주소 붙여 넣기)</pre><div class="plabel">(시연) 리허설 일정 등록</div><pre class="prompt">12월 3일(목) 17:00~17:30에 ‘발표 리허설’ 일정을 내 캘린더에 추가해 줘.
 일정 메모에 발표 주소를 적어 줘.</pre>
+  
   <h3>확인</h3><ul class="check"><li>같은 주소에서 고친 내용이 보이는가</li><li>내 폴더에 HTML 파일과 작업 기록이 있고, 작업 기록에 발표 주소가 적혔는가</li></ul>
   <div class="stuck"><b>막히면</b> — HTML 파일이 안 나오면 Canvas의 코드 보기에서 전체를 복사해 메모장에 붙여 넣고 이름 끝을 .html로 저장합니다.</div>
 </section>
@@ -226,6 +239,13 @@ details{margin-top:12px;font-size:13px} summary{cursor:pointer;font-weight:700}
     <p class="goal">오늘 만든 폴더와 HTML 파일을 그대로 씁니다. 둘 다 무료로 시작할 수 있습니다.</p>
     <div class="note">GitHub Pages 사용법 영상 — 내 HTML 파일을 GitHub에 올려 웹 주소를 만드는 방법(수업에서는 강사 시연으로만 봤습니다) · <a href="https://m.site.naver.com/2lix8" target="_blank" rel="noopener">m.site.naver.com/2lix8</a></div>
     <div class="note">OpenCode — 내 폴더에서 일하는 AI. 설치 영상(15분) — “OpenCode 설치법 | 무료 AI 코딩 시작하기 (Windows·Mac)” · <a href="https://youtu.be/HhPiDZCbUf0" target="_blank" rel="noopener">youtu.be/HhPiDZCbUf0</a></div>
+  </section>
+  <section class="lab sites-page" id="사이트">
+    <div class="lab-head"><span class="no">사이트 모음</span><span class="when">수업에서 들어간 곳 · 주소를 눌러 엽니다</span></div>
+    <h2>수업에서 쓴 사이트</h2>
+    <table class="sites" style="margin-top:10px"><thead><tr><th style="width:14%">언제</th><th>무엇</th><th style="width:38%">주소</th></tr></thead><tbody>
+    <tr><td>공통</td><td>공유보드 — 실습 메일 받기 · 실습 안내서 · 결과물 올리기</td><td><a href="https://hong-minji.github.io/hanyang/" target="_blank" rel="noopener">hong-minji.github.io/hanyang</a></td></tr><tr><td>공통</td><td>실습 자료 폴더 — 내려받지 말고 내 드라이브에 바로가기 추가</td><td><a href="https://drive.google.com/drive/folders/14GFGXmkmHGRQjvshUpT2kzQS2-O7Q7mW?usp=sharing" target="_blank" rel="noopener">drive.google.com/drive/folders/14GFGXmkmHGRQ…</a></td></tr><tr><td>공통</td><td>Gemini — 오늘 쓰는 AI. Canvas도 여기서</td><td><a href="https://gemini.google.com" target="_blank" rel="noopener">gemini.google.com</a></td></tr><tr><td>1교시</td><td>arena.ai — 지금의 AI 모델 순위표(리더보드)</td><td><a href="https://arena.ai" target="_blank" rel="noopener">arena.ai</a></td></tr><tr><td>1교시</td><td>OpenCode — 내 폴더에서 일하는 AI, 무료 모델로 시작</td><td><a href="https://opencode.ai" target="_blank" rel="noopener">opencode.ai</a></td></tr><tr><td>1교시</td><td>OpenCode 설치법 영상(15분)</td><td><a href="https://youtu.be/HhPiDZCbUf0" target="_blank" rel="noopener">youtu.be/HhPiDZCbUf0</a></td></tr><tr><td>1교시</td><td>Google AI 학생 혜택 — 개인 Gmail 계정으로 신청</td><td><a href="https://one.google.com/ai-student" target="_blank" rel="noopener">one.google.com/ai-student</a></td></tr><tr><td>1교시</td><td>Google Drive — 내 폴더 만들기</td><td><a href="https://drive.google.com" target="_blank" rel="noopener">drive.google.com</a></td></tr><tr><td>1교시</td><td>YouTube — 채널 만들기</td><td><a href="https://www.youtube.com" target="_blank" rel="noopener">youtube.com</a></td></tr><tr><td>2교시</td><td>Apps Script — Slides를 코드로 만들기(강사 시연)</td><td><a href="https://script.google.com" target="_blank" rel="noopener">script.google.com</a></td></tr><tr><td>2교시</td><td>Pinterest — ‘diagram asset’ · ‘flowchart asset’으로 에셋 레퍼런스 찾기</td><td><a href="https://www.pinterest.com" target="_blank" rel="noopener">pinterest.com</a></td></tr><tr><td>2교시</td><td>frontend-slides — HTML 발표 디자인 모음(미리보기 그림 · 스타일 이름)</td><td><a href="https://github.com/zarazhangrui/frontend-slides" target="_blank" rel="noopener">github.com/zarazhangrui/frontend-slides</a></td></tr><tr><td>2교시</td><td>눈누 — 무료 한글 글꼴. 글꼴 페이지의 ‘웹폰트로 사용’ 코드를 복사</td><td><a href="https://noonnu.cc" target="_blank" rel="noopener">noonnu.cc</a></td></tr><tr><td>3교시</td><td>Google Vids — Drive의 영상 다듬기</td><td><a href="https://docs.google.com/videos" target="_blank" rel="noopener">docs.google.com/videos</a></td></tr><tr><td>3교시</td><td>YouTube 스튜디오 — 영상 업로드 · ‘일부 공개’</td><td><a href="https://studio.youtube.com" target="_blank" rel="noopener">studio.youtube.com</a></td></tr><tr><td>3교시</td><td>Google Sites — 발표를 웹 주소로 게시</td><td><a href="https://sites.google.com" target="_blank" rel="noopener">sites.google.com</a></td></tr><tr><td>더 해 보기</td><td>GitHub Pages 사용법 영상</td><td><a href="https://m.site.naver.com/2lix8" target="_blank" rel="noopener">m.site.naver.com/2lix8</a></td></tr><tr><td>더 해 보기</td><td>GitHub — 공유보드가 올라가 있는 저장소</td><td><a href="https://github.com/hong-minji/hanyang" target="_blank" rel="noopener">github.com/hong-minji/hanyang</a></td></tr><tr><td>더 해 보기</td><td>Firebase — 방명록 · 투표처럼 입력을 저장하는 기능</td><td><a href="https://firebase.google.com" target="_blank" rel="noopener">firebase.google.com</a></td></tr>
+    </tbody></table>
   </section>
   <div class="foot"><span>홍민지 · 프로젝트 발표자료 제작 특강</span><span>2026.11.24 · 기능과 메뉴 이름은 계정과 업데이트에 따라 다를 수 있습니다</span></div>
 </div>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>휴식 영상</title>
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+iframe{position:fixed;inset:0;width:100%;height:100%;border:0}
+p{margin:42vh 0 0;color:#888;font:16px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;text-align:center}
+</style>
+</head>
+<body>
+<script>
+// 강의 발표 화면(내 컴퓨터에서 연 HTML 파일)에 YouTube를 띄우기 위한 페이지.
+// 내 컴퓨터에서 연 파일(file://)은 YouTube를 넣으면 '오류 153'이 나서, 웹 주소가 있는 이 페이지가 대신 넣는다.
+// 쓰는 법: break.html?v=<영상 ID 11자>&t=<시작 초>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var v = q.get('v') || '', t = parseInt(q.get('t') || '0', 10) || 0;
+  if (!/^[A-Za-z0-9_-]{11}$/.test(v)) {
+    var p = document.createElement('p'); p.textContent = '영상 주소가 없습니다'; document.body.appendChild(p); return;
+  }
+  var f = document.createElement('iframe');
+  f.src = 'https://www.youtube.com/embed/' + v + '?autoplay=1&rel=0&playsinline=1' + (t > 0 ? '&start=' + t : '');
+  f.title = '휴식 영상';
+  f.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture';
+  f.allowFullscreen = true;
+  f.referrerPolicy = 'strict-origin-when-cross-origin';
+  document.body.appendChild(f);
+})();
+</script>
+</body>
+</html>

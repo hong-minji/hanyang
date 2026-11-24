@@ -9,53 +9,42 @@
 html,body{margin:0;height:100%;background:#000;overflow:hidden}
 iframe{position:fixed;inset:0;width:100%;height:100%;border:0}
 p{margin:42vh 0 0;color:#888;font:16px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;text-align:center}
-#unmute{position:fixed;inset:0;z-index:2;cursor:pointer;background:transparent;border:0;padding:0}
-#unmute span{position:absolute;left:50%;bottom:9vh;transform:translateX(-50%);background:rgba(0,0,0,.72);color:#fff;font:600 clamp(16px,1.6vw,26px)/1.4 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif;padding:.7em 1.3em;border-radius:999px;white-space:nowrap}
-#unmute[hidden]{display:none}
 </style>
 </head>
 <body>
 <div id="player"></div>
-<button id="unmute" type="button" hidden><span>🔇 소리 없이 재생 중 — 화면을 한 번 누르면 소리가 나요</span></button>
 <script>
 // 강의 발표 화면(내 컴퓨터에서 연 HTML 파일)에 YouTube를 띄우기 위한 페이지.
 // 내 컴퓨터에서 연 파일(file://)은 YouTube를 넣으면 '오류 153'이 나서, 웹 주소가 있는 이 페이지가 대신 넣는다.
-// 쓰는 법: break.html?v=<영상 ID 11자>&t=<시작 초>
-// 자동 재생: 소리와 함께 틀어 보고, 브라우저가 막으면(그 창을 아직 누른 적이 없을 때) 소리 없이라도 바로 튼다.
-//           화면을 한 번 누르면 소리가 난다. 소리 상태는 발표 화면에 알려 준다(type: 'break-audio').
+// 쓰는 법: break.html?v=<영상 ID 11자>&t=<시작 초>[&mute=1]
+//   mute=1 — 그림만 튼다(소리는 대본 화면 쪽 플레이어가 낸다).
+// 소리 있는 자동 재생을 브라우저가 막으면 화면에는 아무 안내 없이 소리 없이 틀고, 부모 창에 알린다(type: 'break-audio').
 (function () {
   var q = new URLSearchParams(location.search);
-  var v = q.get('v') || '', t = parseInt(q.get('t') || '0', 10) || 0;
+  var v = q.get('v') || '', t = parseInt(q.get('t') || '0', 10) || 0, wantMute = q.get('mute') === '1';
   if (!/^[A-Za-z0-9_-]{11}$/.test(v)) {
     var p = document.createElement('p'); p.textContent = '영상 주소가 없습니다'; document.body.appendChild(p); return;
   }
-  var player = null, muted = false, layer = document.getElementById('unmute');
+  var player = null, fellBack = false;
   function tell(m) { try { if (parent !== window) parent.postMessage({ type: 'break-audio', muted: m }, '*'); } catch (e) {} }
   function playMuted() {
-    if (!player || muted) return;
-    muted = true; player.mute(); player.playVideo(); layer.hidden = false; tell(true);
+    if (!player || fellBack || wantMute) return;
+    fellBack = true; player.mute(); player.playVideo(); tell(true);
   }
-  function unmute() {
-    if (!player) return;
-    player.unMute(); player.setVolume(100); player.playVideo();
-    muted = false; layer.hidden = true; tell(false);
-  }
-  layer.addEventListener('click', unmute);
-  // 발표 화면이 자기 창에서 받은 클릭으로 소리를 켜 달라고 할 때(그래야 다음 휴식 영상부터 소리와 함께 자동 재생된다)
-  window.addEventListener('message', function (e) { if (e.source === parent && e.data && e.data.type === 'break-unmute') unmute(); });
   window.onYouTubeIframeAPIReady = function () {
     player = new YT.Player('player', {
       videoId: v, width: '100%', height: '100%',
-      playerVars: { autoplay: 1, start: t, rel: 0, playsinline: 1, origin: location.origin },
+      playerVars: { autoplay: 1, start: t, rel: 0, playsinline: 1, mute: wantMute ? 1 : 0, origin: location.origin },
       events: {
         onReady: function (e) {
+          if (wantMute) e.target.mute();
           e.target.playVideo();
           // 혹시 '막힘' 알림 없이 멈춰 있으면(재생 시간이 그대로면) 소리 없이 튼다.
           // 재생 상태 값은 보지 않는다 — 광고가 나오는 동안에도 '시작 전(-1)'으로 나와서, 소리 나는 광고를 끄게 된다.
           var t0 = e.target.getCurrentTime();
           setTimeout(function () { if (Math.abs(player.getCurrentTime() - t0) < 0.5) playMuted(); }, 5000);
         },
-        onAutoplayBlocked: playMuted   // 브라우저가 소리 있는 자동 재생을 막았을 때(그 창을 아직 누른 적이 없을 때)
+        onAutoplayBlocked: playMuted   // 브라우저가 소리 있는 자동 재생을 막았을 때
       }
     });
   };
